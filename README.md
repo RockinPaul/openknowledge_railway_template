@@ -76,6 +76,11 @@ and then stops as unhealthy with nothing in the container's own log — and the 
 **one replica** because the collaboration server is single-writer: two replicas silently write to
 the same volume.
 
+## Rebuilds
+
+Each service watches only its own directory, so editing this README or the changelog does not
+rebuild anything and does not interrupt anyone's editing session.
+
 ## Bumping OpenKnowledge
 
 Upstream publishes to npm many times a day, so this pins an exact version rather than tracking
