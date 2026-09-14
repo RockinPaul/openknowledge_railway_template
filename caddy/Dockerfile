@@ -3,7 +3,7 @@
 #
 # The configuration is baked into the image rather than mounted, because managed
 # platforms provide no way to mount a file.
-FROM caddy:2.10-alpine
+FROM caddy:2.11-alpine
 
 # PORT is overridden by Railway for the service that owns the public domain;
 # this is the local default. Caddy proxies WebSocket upgrades transparently, so

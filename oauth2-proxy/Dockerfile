@@ -3,7 +3,7 @@
 # A thin wrapper over the upstream image. It exists so the IPv6 bind and the
 # proxy settings are baked rather than supplied as service variables, which
 # template generation nulls into required composer fields.
-FROM quay.io/oauth2-proxy/oauth2-proxy:v7.13.0
+FROM quay.io/oauth2-proxy/oauth2-proxy:v7.15.4
 
 # Railway's private network is IPv6-only, so listen on [::].
 # Port 8080 rather than oauth2-proxy's default 4180: Railway's health check

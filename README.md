@@ -14,8 +14,8 @@ and agents a bearer token.
 
 | Service | Image | Public | Purpose |
 |---|---|---|---|
-| `caddy` | `caddy:2.10-alpine` | **yes** | The only way in. Bearer-token gate on `/mcp`, everything else to the login |
-| `oauth2-proxy` | `quay.io/oauth2-proxy/oauth2-proxy:v7.13.0` | no | Google login for the browser editor |
+| `caddy` | `caddy:2.11-alpine` | **yes** | The only way in. Bearer-token gate on `/mcp`, everything else to the login |
+| `oauth2-proxy` | `quay.io/oauth2-proxy/oauth2-proxy:v7.15.4` | no | Google login for the browser editor |
 | `ok` | `node:24-slim` + `@inkeep/open-knowledge` | no | The server, editor, `/collab` WebSocket and `/mcp`. Volume at `/data` |
 
 `ok` and `oauth2-proxy` have no domains at all. Caddy is the only route to either.
@@ -70,9 +70,11 @@ them wrong produces a deployment that looks fine and is not:
 - **`/mcp` must not be buffered.** It is a server-sent-event stream. Caddy streams by default, and
   `/mcp` bypasses oauth2-proxy entirely so the login layer cannot interrupt it.
 
-Two more Railway specifics: `OK_BIND=::` and `OAUTH2_PROXY_HTTP_ADDRESS=[::]:4180` because the
-private network is IPv6-only, and the `ok` service stays at **one replica** because the
-collaboration server is single-writer — two replicas silently write to the same volume.
+Two more Railway specifics: `OK_BIND=::` and `OAUTH2_PROXY_HTTP_ADDRESS=[::]:8080` because the
+private network is IPv6-only — note that is not oauth2-proxy's default `4180`, which Railway starts
+and then stops as unhealthy with nothing in the container's own log — and the `ok` service stays at
+**one replica** because the collaboration server is single-writer: two replicas silently write to
+the same volume.
 
 ## Bumping OpenKnowledge
 
