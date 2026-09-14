@@ -1,0 +1,36 @@
+:{$PORT} {
+	# Platform health check, answered by Caddy itself. It must come first: every
+	# other path leads to the Google login, which answers a probe with a 302 and
+	# Railway treats a redirect as unhealthy.
+	handle /up {
+		respond "ok" 200
+	}
+
+	# Agents reach /mcp with a shared bearer token and no browser step. This path
+	# deliberately bypasses oauth2-proxy: /mcp is a server-sent-event stream, and
+	# a login proxy in front of it would interrupt the response.
+	@mcp path /mcp /mcp/*
+	handle @mcp {
+		route {
+			@bad not header Authorization "Bearer {env.MCP_TOKEN}"
+			respond @bad "Unauthorized" 401
+			reverse_proxy ok.railway.internal:8080 {
+				# The server compares Host against OK_EXTERNAL_URL and 403s a
+				# mismatch, so forward the client's host rather than the upstream's.
+				header_up Host {host}
+				# TLS ends at Railway's edge, so this hop is plain HTTP. Without
+				# this header the server hands the editor a ws:// socket, which the
+				# browser blocks as mixed content on an https page.
+				header_up X-Forwarded-Proto https
+			}
+		}
+	}
+
+	# Everything else — the editor and its /collab WebSocket — through the login.
+	handle {
+		reverse_proxy oauth2-proxy.railway.internal:4180 {
+			header_up Host {host}
+			header_up X-Forwarded-Proto https
+		}
+	}
+}
