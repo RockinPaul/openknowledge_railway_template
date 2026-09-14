@@ -16,3 +16,5 @@ Initial template.
   null it into a required composer field.
 - Caddy answers `/up` itself for the platform health check, so the probe never meets a redirect.
 - `ok` pinned to one replica: the collaboration server is single-writer per volume.
+- Per-service `watchPatterns`, so a documentation commit does not rebuild every service and
+  restart live editing sessions.
