@@ -22,9 +22,11 @@ and agents a bearer token.
 
 ## Before you deploy: create a Google OAuth client
 
-The editor is protected by a Google login, so the template needs a client. Create a **Web
-application** client in the [Google Cloud console](https://console.cloud.google.com/apis/credentials),
-with any placeholder redirect URI for now, and keep the client ID and secret.
+The editor is protected by a Google login, so the template needs a client. In the
+[Google Cloud console](https://console.cloud.google.com/apis/credentials), under APIs and Services
+then Credentials, create an OAuth client ID of type **Web application** — configure the consent
+screen first if that project has none. Give it any placeholder redirect URI for now, and keep the
+client ID and secret: they are `OAUTH2_PROXY_CLIENT_ID` and `OAUTH2_PROXY_CLIENT_SECRET`.
 
 After deploying, set the client's redirect URI to
 `https://YOUR-CADDY-DOMAIN/oauth2/callback`, using the domain Railway gave the `caddy` service.
@@ -44,15 +46,20 @@ This order matters: the domain does not exist until the first deploy.
 |---|---|---|---|
 | `oauth2-proxy` | `OAUTH2_PROXY_CLIENT_ID` | **you supply** | Google OAuth client ID |
 | `oauth2-proxy` | `OAUTH2_PROXY_CLIENT_SECRET` | **you supply** | Google OAuth client secret |
-| `oauth2-proxy` | `OAUTH2_PROXY_EMAIL_DOMAINS` | `*` | Restrict sign-in to your domain, e.g. `example.com`. Leave `*` and anyone with a Google account can sign in. |
+| `oauth2-proxy` | `OAUTH2_PROXY_EMAIL_DOMAINS` | **you supply** | Comma-separated email domains allowed to sign in, e.g. `example.com`. `*` lets in any Google account. |
 | `caddy` | `MCP_TOKEN` | generated (48 hex) | Bearer token agents send to reach `/mcp` |
 | `ok` | `OK_ALLOW_EXTERNAL` | `1` | Exposure consent. The server refuses to serve a proxied request without it. |
 
 `OK_EXTERNAL_URL`, the redirect URL, the cookie secret and the private hostnames are all set by
 reference or generated.
 
-**Set `OAUTH2_PROXY_EMAIL_DOMAINS` to your own domain.** The default of `*` means any Google account
-can sign in and edit.
+**`OAUTH2_PROXY_EMAIL_DOMAINS` has no default — the deploy form requires a value.** `*` means any
+Google account can sign in and edit.
+
+A domain allowlist cannot express a single person. If you sign in with a personal `@gmail.com`
+address, the only value that works is `gmail.com`, which admits every Gmail user — no better than
+`*`. Use a Google account on a domain you control. Restricting to specific addresses instead would
+need oauth2-proxy's `--authenticated-emails-file`, which this template does not currently wire up.
 
 ## Why it is shaped this way
 

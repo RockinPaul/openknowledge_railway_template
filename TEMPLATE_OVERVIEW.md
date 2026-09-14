@@ -15,8 +15,12 @@ so the agent stream is never interrupted by a login redirect. The knowledge base
 and survives redeploys.
 
 What you supply is a Google OAuth client, because the editor is protected by a Google sign-in.
-Create the client before deploying, then point its redirect URI at the domain Railway generates.
-Everything else, including the agent token and the cookie secret, is generated for you.
+In the Google Cloud console, under APIs and Services then Credentials, create an OAuth client ID
+of type **Web application** — configuring the consent screen first if that project has none. Give
+it any placeholder redirect URI for now; you correct it once Railway has generated your domain.
+The client ID and secret it shows you are the `OAUTH2_PROXY_CLIENT_ID` and
+`OAUTH2_PROXY_CLIENT_SECRET` the deploy form asks for. Everything else, including the agent token
+and the cookie secret, is generated for you.
 
 ## Common Use Cases
 
@@ -51,12 +55,16 @@ Three services build from this template's repository, each from its own director
   entrypoint initialises the knowledge base on the empty volume at first boot and starts the server
   afterwards. One replica only: the collaboration server is single-writer.
 
-After deploying, set your Google client's redirect URI to `https://YOUR-CADDY-DOMAIN/oauth2/callback`
-and open the caddy service's URL. Agents connect to the same domain with `/mcp` appended, sending
+After deploying, edit your Google client so its authorized redirect URI is
+`https://YOUR-CADDY-DOMAIN/oauth2/callback`, using the domain Railway gave the caddy service, then
+open that domain and sign in. Agents connect to the same domain with `/mcp` appended, sending
 `MCP_TOKEN` as a bearer token.
 
-Consider setting `OAUTH2_PROXY_EMAIL_DOMAINS` on the sign-in service to your own domain. It defaults
-to `*`, which lets any Google account sign in.
+The third field, `OAUTH2_PROXY_EMAIL_DOMAINS`, is the comma-separated list of email domains
+allowed to sign in. It has no default, and `*` admits any Google account. Note that a domain
+allowlist cannot express a single person: signing in with a personal gmail.com address means the
+only value that works is `gmail.com`, which admits every Gmail user. Use an account on a domain
+you control.
 
 ## Why Deploy OpenKnowledge on Railway?
 
