@@ -28,7 +28,7 @@
 
 	# Everything else — the editor and its /collab WebSocket — through the login.
 	handle {
-		reverse_proxy oauth2-proxy.railway.internal:4180 {
+		reverse_proxy oauth2-proxy.railway.internal:8080 {
 			header_up Host {host}
 			header_up X-Forwarded-Proto https
 		}
