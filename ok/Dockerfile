@@ -21,11 +21,16 @@ RUN apt-get update \
 # is nulled into a required composer field by template generation.
 # OK_BIND=:: because Railway's private network is IPv6-only; upstream warns not
 # to combine "0.0.0.0 ::" on one port because the listeners conflict.
-# OK_ALLOW_EXTERNAL is deliberately NOT baked. Without it the server refuses to
-# boot and names the fix, which is the secure default; the template supplies it
-# as a service variable instead.
+# OK_ALLOW_EXTERNAL is baked here, departing from upstream's image. Upstream
+# leaves it unset so a bare `docker run` refuses and names the fix. In this
+# template the consent is inherent - the deployment exists to be reached through
+# the gateway - and a literal service variable would be nulled by template
+# generation into a required field asking the deployer to type "1". The
+# entrypoint still refuses to start without OK_EXTERNAL_URL, which is the
+# declaration that actually varies per deployment.
 ENV PORT=8080 \
-    OK_BIND=::
+    OK_BIND=:: \
+    OK_ALLOW_EXTERNAL=1
 
 # No VOLUME instruction: managed builders reject it, and persistence is the
 # platform's job via a mounted volume.
