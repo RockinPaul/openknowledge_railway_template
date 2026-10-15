@@ -15,7 +15,7 @@ and agents a bearer token.
 | Service | Image | Public | Purpose |
 |---|---|---|---|
 | `caddy` | `caddy:2.11-alpine` | **yes** | The only way in. Bearer-token gate on `/mcp`, everything else to the login |
-| `oauth2-proxy` | `quay.io/oauth2-proxy/oauth2-proxy:v7.15.4` | no | Google login for the browser editor |
+| `oauth2-proxy` | `quay.io/oauth2-proxy/oauth2-proxy:v7.15.5` | no | Google login for the browser editor |
 | `ok` | `node:24-slim` + `@inkeep/open-knowledge` | no | The server, editor, `/collab` WebSocket and `/mcp`. Volume at `/data` |
 
 `ok` and `oauth2-proxy` have no domains at all. Caddy is the only route to either.

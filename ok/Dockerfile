@@ -3,7 +3,7 @@
 #
 # Upstream publishes no image, so this installs the npm package at a pinned
 # version, following the Dockerfile in their Docker guide.
-ARG OK_VERSION=0.71.13
+ARG OK_VERSION=0.86.16
 ARG NODE_IMAGE=node:24-slim
 
 FROM ${NODE_IMAGE}
