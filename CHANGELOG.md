@@ -3,7 +3,7 @@
 ## 2026-11-02
 
 - `@inkeep/open-knowledge` 0.86.16 → 0.89.0. Upstream security fixes in this range include a Content-Security-Policy on the web app shell, trusted origins required for private skills, contained skill refresh paths, and embedding credentials kept in OS credential storage.
-- The server has no OS keychain in a container. Upstream falls back to file storage and reports that it did; nothing in this template configures embedding credentials.
+- The server has no OS keychain in a container, and upstream reports a fallback when none is available. This template configures no embedding credentials, and a fresh 0.89.0 deploy logged no credential errors.
 
 ### Upgrading an existing deployment
 
