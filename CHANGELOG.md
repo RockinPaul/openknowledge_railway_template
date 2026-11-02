@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-02
+
+- `@inkeep/open-knowledge` 0.86.16 → 0.89.0. Upstream security fixes in this range include a Content-Security-Policy on the web app shell, trusted origins required for private skills, contained skill refresh paths, and embedding credentials kept in OS credential storage.
+- The server has no OS keychain in a container. Upstream falls back to file storage and reports that it did; nothing in this template configures embedding credentials.
+
+### Upgrading an existing deployment
+
+Nothing to change. The git repository on the volume is kept.
+
 ## 2026-10-15
 
 - `@inkeep/open-knowledge` 0.71.13 → 0.86.16. Upstream security fixes in this range include refusing
