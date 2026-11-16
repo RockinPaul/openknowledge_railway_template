@@ -20,7 +20,8 @@ of type **Web application** — configuring the consent screen first if that pro
 it any placeholder redirect URI for now; you correct it once Railway has generated your domain.
 The client ID and secret it shows you are the `OAUTH2_PROXY_CLIENT_ID` and
 `OAUTH2_PROXY_CLIENT_SECRET` the deploy form asks for. Everything else, including the agent token
-and the cookie secret, is generated for you.
+and the cookie secret, is generated for you. Google is the default; for other providers see
+[Using a provider other than Google](README.md#using-a-provider-other-than-google) in the README.
 
 ## Common Use Cases
 
