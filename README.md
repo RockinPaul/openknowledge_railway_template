@@ -14,8 +14,8 @@ and agents a bearer token.
 
 | Service | Image | Public | Purpose |
 |---|---|---|---|
-| `caddy` | `caddy:2.11-alpine` | **yes** | The only way in. Bearer-token gate on `/mcp`, everything else to the login |
-| `oauth2-proxy` | `quay.io/oauth2-proxy/oauth2-proxy:v7.15.5` | no | Google login for the browser editor |
+| `caddy` | `caddy:2.11.9-alpine` | **yes** | The only way in. Bearer-token gate on `/mcp`, everything else to the login |
+| `oauth2-proxy` | `quay.io/oauth2-proxy/oauth2-proxy:v7.15.6` | no | Google login for the browser editor |
 | `ok` | `node:24-slim` + `@inkeep/open-knowledge` | no | The server, editor, `/collab` WebSocket and `/mcp`. Volume at `/data` |
 
 `ok` and `oauth2-proxy` have no domains at all. Caddy is the only route to either.
@@ -31,6 +31,29 @@ client ID and secret: they are `OAUTH2_PROXY_CLIENT_ID` and `OAUTH2_PROXY_CLIENT
 After deploying, set the client's redirect URI to
 `https://YOUR-CADDY-DOMAIN/oauth2/callback`, using the domain Railway gave the `caddy` service.
 This order matters: the domain does not exist until the first deploy.
+
+## Using a provider other than Google
+
+Google is the default. To sign in with a different provider, override `OAUTH2_PROXY_PROVIDER` on
+the `oauth2-proxy` service and replace `OAUTH2_PROXY_CLIENT_ID` / `OAUTH2_PROXY_CLIENT_SECRET`
+with the credentials of an application registered with that provider. OIDC-based providers also
+need `OAUTH2_PROXY_OIDC_ISSUER_URL`. The environment variables are documented in oauth2-proxy's
+[configuration overview](https://github.com/oauth2-proxy/oauth2-proxy/blob/v7.15.6/docs/docs/configuration/overview.md).
+
+GitLab, for example ([provider documentation](https://github.com/oauth2-proxy/oauth2-proxy/blob/v7.15.6/docs/docs/configuration/providers/gitlab.md)):
+
+```bash
+OAUTH2_PROXY_PROVIDER=gitlab
+OAUTH2_PROXY_OIDC_ISSUER_URL=https://gitlab.com
+OAUTH2_PROXY_GITLAB_GROUPS=your_gitlab_group
+OAUTH2_PROXY_EMAIL_DOMAINS=*
+```
+
+Register the GitLab application with the `openid`, `profile` and `email` scopes. For a self-hosted
+GitLab, use its own URL as the issuer. `OAUTH2_PROXY_GITLAB_GROUPS` takes comma-separated group
+slugs; with the `*` email domain, access control rests on that group restriction, so restrict
+`OAUTH2_PROXY_EMAIL_DOMAINS` instead if you do not use groups. The redirect URI is unchanged:
+`https://YOUR-CADDY-DOMAIN/oauth2/callback` on the public Caddy domain, exactly as above.
 
 ## First run
 
