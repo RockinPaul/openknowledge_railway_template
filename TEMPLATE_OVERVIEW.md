@@ -21,7 +21,7 @@ it any placeholder redirect URI for now; you correct it once Railway has generat
 The client ID and secret it shows you are the `OAUTH2_PROXY_CLIENT_ID` and
 `OAUTH2_PROXY_CLIENT_SECRET` the deploy form asks for. Everything else, including the agent token
 and the cookie secret, is generated for you. Google is the default; for other providers see
-[Using a provider other than Google](README.md#using-a-provider-other-than-google) in the README.
+[Using a provider other than Google](https://github.com/RockinPaul/openknowledge_railway_template/blob/main/README.md#using-a-provider-other-than-google) in the README.
 
 ## Common Use Cases
 
